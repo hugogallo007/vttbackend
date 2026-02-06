@@ -1,0 +1,29 @@
+{
+  "name": "test-backend-manage-identity",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "nodemon": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flowintelli-LLC/backend-manage-identity.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Flowintelli-LLC/backend-manage-identity/issues"
+  },
+  "homepage": "https://github.com/Flowintelli-LLC/backend-manage-identity#readme",
+  "description": "",
+  "dependencies": {
+    "@azure/identity": "^4.13.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.11"
+  },
+  "type": "module"
+}
