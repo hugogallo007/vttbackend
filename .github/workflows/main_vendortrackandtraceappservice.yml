@@ -55,6 +55,27 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_07D0514469694F66B0E64D659871314C }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_7A5A49EEFD2F4431968496763CE859FB }}
 
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+ 
+      - name: Get runner public IP
+        id: ip
+        run: echo "ip=$(curl -s https://api.ipify.org)" >> $GITHUB_OUTPUT
+ 
+      - name: Allow runner IP on SCM
+        run: |
+          az webapp config access-restriction add \
+          -g vendortrackandtrace -n vendortrackandtraceappservice \
+          --rule-name gha-temp --action Allow \
+          --ip-address ${{ steps.ip.outputs.ip }}/32 \
+          --priority 100 --scm-site true
+ 
+
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -63,3 +84,12 @@ jobs:
           slot-name: 'Production'
           package: .
           
+ 
+      - name: Remove runner IP from SCM
+        if: always()
+        run: |
+          az webapp config access-restriction remove \
+          -g vendortrackandtrace -n vendortrackandtraceappservice \
+          --rule-name gha-temp --scm-site true
+
+   
