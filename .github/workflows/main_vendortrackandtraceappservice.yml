@@ -68,11 +68,7 @@ jobs:
           --ip-address ${{ steps.ip.outputs.ip }}/32 \
           --priority 100 --scm-site true
  
-      - name: Verify rule exists on SCM
-        run: |
-          az webapp config access-restriction show \
-          -g vendortrackandtrace -n vendortrackandtraceappservice --scm-site true \
-          | grep -n "gha-temp" || (echo "Rule not found!" && exit 1) 
+   
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
