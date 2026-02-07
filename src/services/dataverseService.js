@@ -2,7 +2,7 @@ import { dataverseFetch } from "./dataverseClient.js";
 
 export const getChangeHistory = async () => {
   try {
-    const response = await dataverseFetch("/cr6c3_changehistories");
+    const response = await dataverseFetch("/cr673_changehistories");
     if (!response.ok) {
       throw new Error(
         `Error en la solicitud a Dataverse: ${response.status} ${response.statusText}`,
@@ -21,7 +21,7 @@ export const getChangeHistory = async () => {
 
 export const getProblemCountries = async () => {
   try {
-    const response = await dataverseFetch("/cr6c3_problemcountries");
+    const response = await dataverseFetch("/cr673_problemcountries");
     if (!response.ok) {
       throw new Error(
         `Error en la solicitud a Dataverse
