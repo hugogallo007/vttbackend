@@ -4,17 +4,17 @@
 //
 // Cada owner tiene:
 //   - id / name:         identificador que llega como query param
-//   - rcaIds:            valores base de cr6c3_rcastatus que le pertenecen
+//   - rcaIds:            valores base de cr673_rcastatus que le pertenecen
 //                        (se aplican cuando reviewstatus NO es "Reviewed")
-//   - remarkOverrides:   valores de cr6c3_gcoremark que transfieren un
+//   - remarkOverrides:   valores de cr673_gcoremark que transfieren un
 //                        registro a este owner cuando reviewstatus ES
 //                        "Reviewed"
 //
 // Lógica:
-//   1. Si cr6c3_reviewstatus != "Reviewed" (o es null):
-//      → el owner se determina por cr6c3_rcastatus según rcaIds.
-//   2. Si cr6c3_reviewstatus == "Reviewed":
-//      → el owner se determina por cr6c3_gcoremark según remarkOverrides.
+//   1. Si cr673_reviewstatus != "Reviewed" (o es null):
+//      → el owner se determina por cr673_rcastatus según rcaIds.
+//   2. Si cr673_reviewstatus == "Reviewed":
+//      → el owner se determina por cr673_gcoremark según remarkOverrides.
 //      → Si el remark mapea a "N/A" (vacío, Blank, Other), el registro
 //        no pertenece a ningún owner.
 //
@@ -23,11 +23,11 @@
 // ─────────────────────────────────────────────────────────────────
 
 /** Campo de Dataverse que indica si el registro fue revisado */
-export const REVIEW_STATUS_FIELD = "cr6c3_reviewstatus";
+export const REVIEW_STATUS_FIELD = "cr673_reviewstatus";
 export const REVIEW_STATUS_REVIEWED = "Reviewed";
 
 /** Campo de remark que determina el nuevo owner cuando está revisado */
-export const REMARK_FIELD = "cr6c3_gcoremark";
+export const REMARK_FIELD = "cr673_gcoremark";
 
 export const OWNERS = [
   {

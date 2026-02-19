@@ -3,29 +3,29 @@ export const VIEWS = [
   {
     key: "delta",
     domains: ["deltaww.com"], // o emails específicos
-    table: "cr6c3_deltasuppliers",
-    idField: "cr6c3_deltasupplierid",
+    table: "cr673_deltasuppliers",
+    idField: "cr673_deltasupplierid",
     select: ["*"], // lo que renderizas
   },
   {
     key: "ingrasys",
     domains: ["fii-foxconn.com"],
-    table: "cr6c3_ingrasyssuppliers",
-    idField: "cr6c3_ingrasyssupplierid",
+    table: "cr673_ingrasyssuppliers",
+    idField: "cr673_ingrasyssupplierid",
     select: ["*"],
   },
   {
     key: "quanta",
     domains: ["quantatw.com"],
-    table: "cr6c3_quantasuppliers",
-    idField: "cr6c3_quantasupplierid",
+    table: "cr673_quantasuppliers",
+    idField: "cr673_quantasupplierid",
     select: ["*"],
   },
   {
     key: "ztsystems",
     domains: ["ztsystems.com", "flowintelli.com"],
-    table: "cr6c3_ztsuppliers",
-    idField: "cr6c3_ztsupplierid",
+    table: "cr673_ztsuppliers",
+    idField: "cr673_ztsupplierid",
     select: ["*"],
   },
 ];

@@ -22,7 +22,7 @@ export function buildFilter({ from, to, q, status }) {
   if (q?.trim()) {
     const term = escapeODataString(q.trim());
     // ajusta campos según tu tabla
-    parts.push(`(contains(cr6c3_notificationid,'${term}'))`);
+    parts.push(`(contains(cr673_notificationid,'${term}'))`);
   }
 
   if (status) parts.push(`statuscode eq ${Number(status)}`);
@@ -39,12 +39,12 @@ export function buildFilter({ from, to, q, status }) {
  * Construye el filtro OData para un owner dado.
  *
  * Lógica:
- *   1. Registros cuyo cr6c3_rcastatus pertenece al owner Y cuyo
+ *   1. Registros cuyo cr673_rcastatus pertenece al owner Y cuyo
  *      reviewstatus NO es "Reviewed" (incluye null).
  *      → mantienen su owner base.
  *
  *   2. Registros cuyo reviewstatus ES "Reviewed" Y cuyo remark
- *      (cr6c3_gcoremark) mapea a este owner.
+ *      (cr673_gcoremark) mapea a este owner.
  *      → el remark sobreescribe el owner original.
  *
  *   Ambos grupos se unen con OR.
@@ -60,7 +60,7 @@ export function buildOwnerFilter(owner) {
   // ── 1) Registros base (RCA) que NO están revisados ──────────────────────
   if (owner.rcaIds && owner.rcaIds.length > 0) {
     const rcaClauses = owner.rcaIds.map(
-      (id) => `cr6c3_rcastatus eq '${escapeODataString(id)}'`,
+      (id) => `cr673_rcastatus eq '${escapeODataString(id)}'`,
     );
     const rcaPart = `(${rcaClauses.join(" or ")})`;
 

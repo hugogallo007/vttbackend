@@ -6,26 +6,26 @@ import { VIEWS } from "../config/supplierViews.js";
 // ── Columnas necesarias para el cálculo de RCA ─────────────────────────────
 
 const RCA_SELECT_FIELDS = [
-  "cr6c3_rmacancelledflag",
-  "cr6c3_forwardactualshipdatetime",
-  "cr6c3_dispositiontype",
-  "cr6c3_creationtimestamp",
-  "cr6c3_rmarequestdate",
-  "cr6c3_rmaobtaineddate",
-  "cr6c3_forwardlogformmaterialreadinessda",
-  "cr6c3_forwardlogformactualdeliverydate",
-  "cr6c3_partreceiptdate",
-  "cr6c3_usagenotificationposteddate",
-  "cr6c3_dispositiondate",
-  "cr6c3_reversematerialreadinessdatemmfre",
-  "cr6c3_reverseactualshipdatetime",
-  "cr6c3_reverseactualcarrierunloaddatetime",
-  "cr6c3_goodsreceiptconfirmationdate",
-  "cr6c3_damagedonarrival",
-  "cr6c3_notificationid",
-  "cr6c3_datacentercode",
-  "cr6c3_outofstockflag",
-  "cr6c3_rcastatus",
+  "cr673_rmacancelledflag",
+  "cr673_forwardactualshipdatetime",
+  "cr673_dispositiontype",
+  "cr673_creationtimestamp",
+  "cr673_rmarequestdate",
+  "cr673_rmaobtaineddate",
+  "cr673_forwardlogformmaterialreadinessda",
+  "cr673_forwardlogformactualdeliverydate",
+  "cr673_partreceiptdate",
+  "cr673_usagenotificationposteddate",
+  "cr673_dispositiondate",
+  "cr673_reversematerialreadinessdatemmfre",
+  "cr673_reverseactualshipdatetime",
+  "cr673_reverseactualcarrierunloaddatetime",
+  "cr673_goodsreceiptconfirmationdate",
+  "cr673_damagedonarrival",
+  "cr673_notificationid",
+  "cr673_datacentercode",
+  "cr673_outofstockflag",
+  "cr673_rcastatus",
 ];
 
 // ── Helpers para cargar datos auxiliares ─────────────────────────────────────
@@ -36,17 +36,17 @@ const RCA_SELECT_FIELDS = [
  */
 async function loadSNDisputes() {
   const filter =
-    "(cr6c3_field eq 'cr6c3_failedpartserialnumber' or cr6c3_field eq 'cr6c3_sparepartserialnumber') and cr6c3_status eq 170260000";
-  const select = "cr6c3_notificationid";
+    "(cr673_field eq 'cr673_failedpartserialnumber' or cr673_field eq 'cr673_sparepartserialnumber') and cr673_status eq 170260000";
+  const select = "cr673_notificationid";
 
   let allIds = [];
-  let endpoint = `/cr6c3_changehistories?$select=${select}&$filter=${encodeURIComponent(filter)}`;
+  let endpoint = `/cr673_changehistories?$select=${select}&$filter=${encodeURIComponent(filter)}`;
 
   // Paginar todos los resultados
   while (endpoint) {
     const { data } = await dvJson(endpoint);
     const ids = (data.value || [])
-      .map((r) => r.cr6c3_notificationid)
+      .map((r) => r.cr673_notificationid)
       .filter((id) => typeof id === "string" && id.length > 0);
     allIds.push(...ids);
     endpoint = data["@odata.nextLink"] || null;
@@ -57,34 +57,34 @@ async function loadSNDisputes() {
 
 /**
  * Carga los datacenter codes de países problemáticos.
- * 1. Obtiene countries de cr6c3_problemcountries
- * 2. Busca datacenters cuyo cr6c3_country esté en ese set
- * 3. Retorna un Set de cr6c3_centercode (lowercase)
+ * 1. Obtiene countries de cr673_problemcountries
+ * 2. Busca datacenters cuyo cr673_country esté en ese set
+ * 3. Retorna un Set de cr673_centercode (lowercase)
  */
 async function loadProblemDataCenterCodes() {
   // 1. Obtener países problemáticos
   const { data: countriesData } = await dvJson(
-    "/cr6c3_problemcountries?$select=cr6c3_country",
+    "/cr673_problemcountries?$select=cr673_country",
   );
   const countries = (countriesData.value || [])
-    .map((r) => r.cr6c3_country)
+    .map((r) => r.cr673_country)
     .filter(Boolean);
 
   if (countries.length === 0) return new Set();
 
   // 2. Construir filtro para datacenters
   const countryFilter = countries
-    .map((c) => `cr6c3_country eq '${c.replace(/'/g, "''")}'`)
+    .map((c) => `cr673_country eq '${c.replace(/'/g, "''")}'`)
     .join(" or ");
   const dcFilter = encodeURIComponent(countryFilter);
 
   let allCodes = [];
-  let endpoint = `/cr6c3_datacenters?$select=cr6c3_centercode&$filter=${dcFilter}`;
+  let endpoint = `/cr673_datacenters?$select=cr673_centercode&$filter=${dcFilter}`;
 
   while (endpoint) {
     const { data } = await dvJson(endpoint);
     const codes = (data.value || [])
-      .map((r) => r.cr6c3_centercode?.toLowerCase())
+      .map((r) => r.cr673_centercode?.toLowerCase())
       .filter(Boolean);
     allCodes.push(...codes);
     endpoint = data["@odata.nextLink"] || null;
@@ -105,10 +105,10 @@ async function loadProblemDataCenterCodes() {
  */
 export function determineRCACategory(record, snDisputes, problemDCs) {
   // Priority 1: RMA Cancelled check
-  if (record.cr6c3_rmacancelledflag === true) {
+  if (record.cr673_rmacancelledflag === true) {
     if (
-      record.cr6c3_forwardactualshipdatetime !== null &&
-      record.cr6c3_dispositiontype !== "Return & Unused"
+      record.cr673_forwardactualshipdatetime !== null &&
+      record.cr673_dispositiontype !== "Return & Unused"
     ) {
       return "reconciliation";
     } else {
@@ -116,39 +116,39 @@ export function determineRCACategory(record, snDisputes, problemDCs) {
     }
   }
 
-  const creationTimestamp = parseDate(record.cr6c3_creationtimestamp);
-  const rmaRequestDate = parseDate(record.cr6c3_rmarequestdate);
-  const rmaObtainedDate = parseDate(record.cr6c3_rmaobtaineddate);
+  const creationTimestamp = parseDate(record.cr673_creationtimestamp);
+  const rmaRequestDate = parseDate(record.cr673_rmarequestdate);
+  const rmaObtainedDate = parseDate(record.cr673_rmaobtaineddate);
   const forwardMaterialReadiness = parseDate(
-    record.cr6c3_forwardlogformmaterialreadinessda,
+    record.cr673_forwardlogformmaterialreadinessda,
   );
-  const forwardActualShip = parseDate(record.cr6c3_forwardactualshipdatetime);
+  const forwardActualShip = parseDate(record.cr673_forwardactualshipdatetime);
   const forwardActualDelivery = parseDate(
-    record.cr6c3_forwardlogformactualdeliverydate,
+    record.cr673_forwardlogformactualdeliverydate,
   );
-  const partReceiptDate = parseDate(record.cr6c3_partreceiptdate);
+  const partReceiptDate = parseDate(record.cr673_partreceiptdate);
   const usageNotificationPosted = parseDate(
-    record.cr6c3_usagenotificationposteddate,
+    record.cr673_usagenotificationposteddate,
   );
-  const dispositionDate = parseDate(record.cr6c3_dispositiondate);
+  const dispositionDate = parseDate(record.cr673_dispositiondate);
   const reverseMaterialReadiness = parseDate(
-    record.cr6c3_reversematerialreadinessdatemmfre,
+    record.cr673_reversematerialreadinessdatemmfre,
   );
-  const reverseActualShip = parseDate(record.cr6c3_reverseactualshipdatetime);
+  const reverseActualShip = parseDate(record.cr673_reverseactualshipdatetime);
   const reverseActualCarrierUnload = parseDate(
-    record.cr6c3_reverseactualcarrierunloaddatetime,
+    record.cr673_reverseactualcarrierunloaddatetime,
   );
   const goodsReceiptConfirmation = parseDate(
-    record.cr6c3_goodsreceiptconfirmationdate,
+    record.cr673_goodsreceiptconfirmationdate,
   );
-  const damageOnArrival = record.cr6c3_damagedonarrival === true;
+  const damageOnArrival = record.cr673_damagedonarrival === true;
 
   // Evaluar RCA desde la más avanzada (14) a la menos (1)
 
   // 14. Discrepancy on S/N
   if (
-    record.cr6c3_notificationid &&
-    snDisputes.has(record.cr6c3_notificationid)
+    record.cr673_notificationid &&
+    snDisputes.has(record.cr673_notificationid)
   ) {
     return "discrepancy-sn";
   }
@@ -199,7 +199,7 @@ export function determineRCACategory(record, snDisputes, problemDCs) {
 
   // 11. RVRS Shipment
   if (reverseMaterialReadiness) {
-    const datacenterCode = record.cr6c3_datacentercode?.toLowerCase();
+    const datacenterCode = record.cr673_datacentercode?.toLowerCase();
     const isProblemDataCenter = problemDCs.has(datacenterCode || "");
     const maxDays = isProblemDataCenter ? 10 : 3;
 
@@ -238,7 +238,7 @@ export function determineRCACategory(record, snDisputes, problemDCs) {
       return "disposition";
     }
   } else if (!damageOnArrival && usageNotificationPosted) {
-    if (record.cr6c3_outofstockflag === true) {
+    if (record.cr673_outofstockflag === true) {
       if (
         !dispositionDate ||
         calculateBusinessDays(usageNotificationPosted, dispositionDate) > 1
@@ -295,7 +295,7 @@ export function determineRCACategory(record, snDisputes, problemDCs) {
 
   // RCA para outofstockflag
   if (usageNotificationPosted) {
-    if (record.cr6c3_outofstockflag === false) {
+    if (record.cr673_outofstockflag === false) {
       if (
         !forwardMaterialReadiness ||
         calculateBusinessDays(
@@ -423,7 +423,7 @@ export async function runRCAStatusJob() {
 
     for (const record of records) {
       const newRCA = determineRCACategory(record, snDisputes, problemDCs);
-      const currentRCA = record.cr6c3_rcastatus || null;
+      const currentRCA = record.cr673_rcastatus || null;
 
       // Solo actualizar si el valor cambió
       if (newRCA !== currentRCA) {
@@ -457,7 +457,7 @@ export async function runRCAStatusJob() {
         const ops = chunk.map((u, idx) => ({
           method: "PATCH",
           path: `/${u.table}(${u.id})`,
-          body: { cr6c3_rcastatus: u.newRCA },
+          body: { cr673_rcastatus: u.newRCA },
           contentId: idx + 1,
         }));
 

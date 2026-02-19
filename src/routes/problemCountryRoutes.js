@@ -36,7 +36,7 @@ router.post("/", async (req, res) => {
   try {
     const countryData = req.body;
     const existingCountry = await findProblemCountryByName(
-      countryData.cr6c3_country,
+      countryData.cr673_country,
     );
     if (existingCountry) {
       return res.status(400).json({ error: "Problem Country Already Exists" });

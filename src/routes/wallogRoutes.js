@@ -205,7 +205,7 @@ router.get("/download", requirePortalAccessToken, async (req, res) => {
     const fieldPermissions = {};
     if (rawPermissions && typeof rawPermissions === "object") {
       for (const [key, value] of Object.entries(rawPermissions)) {
-        if (!key.startsWith("cr6c3_") || !value) continue;
+        if (!key.startsWith("cr673_") || !value) continue;
         try {
           const parsed = typeof value === "string" ? JSON.parse(value) : value;
           fieldPermissions[key] = parsed;
@@ -320,7 +320,7 @@ router.post("/upload", requirePortalAccessToken, async (req, res) => {
       const fieldPermissions = {};
       if (rawPermissions && typeof rawPermissions === "object") {
         for (const [key, value] of Object.entries(rawPermissions)) {
-          if (!key.startsWith("cr6c3_") || !value) continue;
+          if (!key.startsWith("cr673_") || !value) continue;
           try {
             const parsed =
               typeof value === "string" ? JSON.parse(value) : value;

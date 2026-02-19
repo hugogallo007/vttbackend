@@ -4,7 +4,7 @@ import { buildFilter, buildOwnerFilter } from "../utils/filterBuilder.js";
 
 export const getChangeHistory = async () => {
   try {
-    const response = await dataverseFetch("/cr6c3_changehistories");
+    const response = await dataverseFetch("/cr673_changehistories");
     if (!response.ok) {
       throw new Error(
         `Error en la solicitud a Dataverse: ${response.status} ${response.statusText}`,
@@ -23,7 +23,7 @@ export const getChangeHistory = async () => {
 
 export const getProblemCountries = async () => {
   try {
-    const response = await dataverseFetch("/cr6c3_problemcountries");
+    const response = await dataverseFetch("/cr673_problemcountries");
     if (!response.ok) {
       throw new Error(
         `Error en la solicitud a Dataverse
@@ -42,7 +42,7 @@ export const getProblemCountries = async () => {
 export const findProblemCountryByName = async (name) => {
   try {
     const response = await dataverseFetch(
-      `/cr6c3_problemcountries?$filter=cr6c3_country eq '${encodeURIComponent(
+      `/cr673_problemcountries?$filter=cr673_country eq '${encodeURIComponent(
         name,
       )}'`,
     );
@@ -63,7 +63,7 @@ export const findProblemCountryByName = async (name) => {
 
 export const createProblemCountry = async (countryData) => {
   try {
-    const response = await dataverseFetch("/cr6c3_problemcountries", {
+    const response = await dataverseFetch("/cr673_problemcountries", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(countryData),
@@ -96,7 +96,7 @@ export const createProblemCountry = async (countryData) => {
 };
 export const deleteProblemCountry = async (id) => {
   try {
-    const response = await dataverseFetch(`/cr6c3_problemcountries(${id})`, {
+    const response = await dataverseFetch(`/cr673_problemcountries(${id})`, {
       method: "DELETE",
     });
 
@@ -122,7 +122,7 @@ export const deleteproblemCountryByName = async (name) => {
         `No se encontró el país con problemas con el nombre: ${name}`,
       );
     }
-    return await deleteProblemCountry(country.cr6c3_problemcountryid);
+    return await deleteProblemCountry(country.cr673_problemcountryid);
   } catch (error) {
     throw new Error(
       `Error al eliminar el país con problemas por nombre: ${error.message}`,
@@ -132,7 +132,7 @@ export const deleteproblemCountryByName = async (name) => {
 
 export const updateProblemCountry = async (id, updatedData) => {
   try {
-    const response = await dataverseFetch(`/cr6c3_problemcountries(${id})`, {
+    const response = await dataverseFetch(`/cr673_problemcountries(${id})`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -159,7 +159,7 @@ export const updateProblemCountry = async (id, updatedData) => {
 export const getAllowedEmails = async () => {
   try {
     const response = await dataverseFetch(
-      "/cr6c3_allowedemailses?$select=cr6c3_allowedemailsid,cr6c3_email,createdon,modifiedon&$orderby=cr6c3_email asc",
+      "/cr673_allowedemailses?$select=cr673_allowedemailsid,cr673_email,createdon,modifiedon&$orderby=cr673_email asc",
     );
     if (!response.ok) {
       throw new Error(
@@ -177,7 +177,7 @@ export const getAllowedEmails = async () => {
 
 export const createAllowedEmail = async (emailData) => {
   try {
-    const response = await dataverseFetch("/cr6c3_allowedemailses", {
+    const response = await dataverseFetch("/cr673_allowedemailses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -202,7 +202,7 @@ export const createAllowedEmail = async (emailData) => {
 
 export const updateAllowedEmail = async (id, updatedData) => {
   try {
-    const response = await dataverseFetch(`/cr6c3_allowedemailses(${id})`, {
+    const response = await dataverseFetch(`/cr673_allowedemailses(${id})`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -226,7 +226,7 @@ export const updateAllowedEmail = async (id, updatedData) => {
 
 export const deleteAllowedEmail = async (id) => {
   try {
-    const response = await dataverseFetch(`/cr6c3_allowedemailses(${id})`, {
+    const response = await dataverseFetch(`/cr673_allowedemailses(${id})`, {
       method: "DELETE",
     });
 
@@ -341,23 +341,23 @@ function buildBaseFilter({ from, to, q, status, owner }) {
   const parts = [];
 
   if (from)
-    parts.push(`cr6c3_creationtimestamp ge ${new Date(from).toISOString()}`);
+    parts.push(`cr673_creationtimestamp ge ${new Date(from).toISOString()}`);
 
   if (to) {
     const d = new Date(to);
     d.setDate(d.getDate() + 1);
-    parts.push(`cr6c3_creationtimestamp lt ${d.toISOString()}`);
+    parts.push(`cr673_creationtimestamp lt ${d.toISOString()}`);
   }
 
   if (q?.trim()) {
     const term = escapeODataString(q.trim());
     // Ajusta campos a los reales en tus tablas
-    parts.push(`(contains(cr6c3_notificationid,'${term}'))`);
+    parts.push(`(contains(cr673_notificationid,'${term}'))`);
   }
 
   if (status) parts.push(`statuscode eq ${Number(status)}`);
 
-  // Filtro por owner (cr6c3_rcastatus)
+  // Filtro por owner (cr673_rcastatus)
   const ownerFilter = buildOwnerFilter(owner);
   if (ownerFilter) parts.push(ownerFilter);
 
@@ -561,7 +561,7 @@ export async function listAdminRecords({
 
 export const getFieldsPermissions = async () => {
   try {
-    const response = await dataverseFetch("/cr6c3_fieldspermissionses");
+    const response = await dataverseFetch("/cr673_fieldspermissionses");
     if (!response.ok) {
       throw new Error(
         `Error en la solicitud a Dataverse: ${response.status} ${response.statusText}`,
@@ -708,14 +708,14 @@ export async function batchUpdateRecords(
         const oldVal = currentRecord[field];
         if (hasValueChanged(oldVal, newVal)) {
           changeEntries.push({
-            cr6c3_notificationid: currentRecord.cr6c3_notificationid || "",
-            cr6c3_field: field,
-            cr6c3_oldvalue: oldVal == null ? "" : String(oldVal),
-            cr6c3_newvalue: newVal == null ? "" : String(newVal),
-            cr6c3_changeby: changedBy,
-            cr6c3_supplier: getSupplierNameFromTable(table),
-            cr6c3_source: source,
-            cr6c3_status: "170260000",
+            cr673_notificationid: currentRecord.cr673_notificationid || "",
+            cr673_field: field,
+            cr673_oldvalue: oldVal == null ? "" : String(oldVal),
+            cr673_newvalue: newVal == null ? "" : String(newVal),
+            cr673_changeby: changedBy,
+            cr673_supplier: getSupplierNameFromTable(table),
+            cr673_source: source,
+            cr673_status: "170260000",
           });
         }
       }
@@ -755,7 +755,7 @@ export async function batchUpdateRecords(
       historyChunks.map((chunk) => {
         const ops = chunk.map((entry, idx) => ({
           method: "POST",
-          path: "/cr6c3_changehistories",
+          path: "/cr673_changehistories",
           body: entry,
           contentId: idx + 1,
         }));
@@ -853,10 +853,10 @@ export async function batchUpdateRecords(
 // ── Helpers: tabla → nombre legible de supplier ─────────────────────────────
 
 const TABLE_TO_SUPPLIER = {
-  cr6c3_deltasuppliers: "Delta",
-  cr6c3_ingrasyssuppliers: "Ingrasys",
-  cr6c3_quantasuppliers: "Quanta",
-  cr6c3_ztsuppliers: "ZT Systems",
+  cr673_deltasuppliers: "Delta",
+  cr673_ingrasyssuppliers: "Ingrasys",
+  cr673_quantasuppliers: "Quanta",
+  cr673_ztsuppliers: "ZT Systems",
 };
 
 function getSupplierNameFromTable(table) {
@@ -1029,14 +1029,14 @@ export async function supplierBatchUpdate(
 
         // Registrar para change history
         changeEntries.push({
-          cr6c3_notificationid: currentRecord.cr6c3_notificationid || "",
-          cr6c3_field: field,
-          cr6c3_oldvalue: oldVal == null ? "" : String(oldVal),
-          cr6c3_newvalue: newVal == null ? "" : String(newVal),
-          cr6c3_changeby: changedBy,
-          cr6c3_supplier: getSupplierNameFromTable(table),
-          cr6c3_source: source,
-          cr6c3_status: "170260000", // auto-approved
+          cr673_notificationid: currentRecord.cr673_notificationid || "",
+          cr673_field: field,
+          cr673_oldvalue: oldVal == null ? "" : String(oldVal),
+          cr673_newvalue: newVal == null ? "" : String(newVal),
+          cr673_changeby: changedBy,
+          cr673_supplier: getSupplierNameFromTable(table),
+          cr673_source: source,
+          cr673_status: "170260000", // auto-approved
         });
       }
 
@@ -1089,7 +1089,7 @@ export async function supplierBatchUpdate(
         historyChunks.map((chunk) => {
           const ops = chunk.map((entry, idx) => ({
             method: "POST",
-            path: "/cr6c3_changehistories",
+            path: "/cr673_changehistories",
             body: entry,
             contentId: idx + 1,
           }));
@@ -1202,7 +1202,7 @@ export async function supplierBatchUpdate(
 
 export const createChangeHistory = async (changeData) => {
   try {
-    const response = await dataverseFetch("/cr6c3_changehistories", {
+    const response = await dataverseFetch("/cr673_changehistories", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

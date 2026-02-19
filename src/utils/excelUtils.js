@@ -3,17 +3,17 @@ import ExcelJS from "exceljs";
 // ── Constantes a nivel de módulo ──────────────────────────────────────────────
 
 const BOOLEAN_FIELDS = [
-  "cr6c3_failedconsumableflag",
-  "cr6c3_gpumanualwalflag",
-  "cr6c3_outofstockflag",
-  "cr6c3_outofwarrantyflag",
-  "cr6c3_rmacancelledflag",
-  "cr6c3_wtpflag",
-  "cr6c3_damagedonarrival",
+  "cr673_failedconsumableflag",
+  "cr673_gpumanualwalflag",
+  "cr673_outofstockflag",
+  "cr673_outofwarrantyflag",
+  "cr673_rmacancelledflag",
+  "cr673_wtpflag",
+  "cr673_damagedonarrival",
 ];
 
 const DROPDOWN_FIELDS = {
-  cr6c3_opsremark: [
+  cr673_opsremark: [
     "",
     "Blank",
     "Closed",
@@ -28,7 +28,7 @@ const DROPDOWN_FIELDS = {
     "SI to acknowledge",
     "Others",
   ],
-  cr6c3_gcoremark: [
+  cr673_gcoremark: [
     "",
     "Blank",
     "Physically Delivered, Not yet acknowledged by SI",
@@ -54,22 +54,22 @@ const DROPDOWN_FIELDS = {
 class ExcelService {
   /** Columnas predefinidas para suppliers en orden específico */
   SUPPLIER_EXCEL_COLUMNS = [
-    "cr6c3_datacentercode",
-    "cr6c3_datacenteroperationsregion",
-    "cr6c3_facilityshortcode",
-    "cr6c3_failedpartserialnumber",
-    "cr6c3_failedpartserialnumberui",
-    "cr6c3_reversetrackingnumber",
-    "cr6c3_reversetrackingnumberui",
-    "cr6c3_forwardtrackingnumber",
-    "cr6c3_gputype",
-    "cr6c3_gpumodel",
-    "cr6c3_gcoremark",
-    "cr6c3_siremark",
-    "cr6c3_dispositiondate",
-    "cr6c3_rmaobtaineddate",
-    "cr6c3_datacenterreceiveddate",
-    "cr6c3_partreceiptdate",
+    "cr673_datacentercode",
+    "cr673_datacenteroperationsregion",
+    "cr673_facilityshortcode",
+    "cr673_failedpartserialnumber",
+    "cr673_failedpartserialnumberui",
+    "cr673_reversetrackingnumber",
+    "cr673_reversetrackingnumberui",
+    "cr673_forwardtrackingnumber",
+    "cr673_gputype",
+    "cr673_gpumodel",
+    "cr673_gcoremark",
+    "cr673_siremark",
+    "cr673_dispositiondate",
+    "cr673_rmaobtaineddate",
+    "cr673_datacenterreceiveddate",
+    "cr673_partreceiptdate",
   ];
 
   // ── Métodos auxiliares ────────────────────────────────────────────────────
@@ -105,12 +105,12 @@ class ExcelService {
     ];
     if (systemFields.includes(key)) return false;
 
-    // Solo campos cr6c3_* o "id"
-    return key === "id" || key.startsWith("cr6c3_");
+    // Solo campos cr673_* o "id"
+    return key === "id" || key.startsWith("cr673_");
   }
 
   /**
-   * Ordena columnas: id primero, cr6c3_notificationid segundo, resto alfabético.
+   * Ordena columnas: id primero, cr673_notificationid segundo, resto alfabético.
    * @param {string[]} keys
    * @returns {string[]}
    */
@@ -121,7 +121,7 @@ class ExcelService {
     for (const key of keys) {
       if (key === "id") {
         priority[0] = key;
-      } else if (key === "cr6c3_notificationid") {
+      } else if (key === "cr673_notificationid") {
         priority[1] = key;
       } else {
         rest.push(key);
@@ -140,38 +140,38 @@ class ExcelService {
   generateColumnLabel(key) {
     const specialMappings = {
       id: "Record ID",
-      cr6c3_reverseactualcarrierunloaddatetime: "Delivered @ SI",
-      cr6c3_notificationid: "Notification ID",
-      cr6c3_wallog: "WALLOG",
-      cr6c3_rma: "RMA",
-      cr6c3_dc: "DC",
-      cr6c3_region: "Region",
-      cr6c3_gputype: "GPU Type",
-      cr6c3_gpuparttype: "GPU Part Type",
-      cr6c3_failedgpusn: "Failed GPU SN",
-      cr6c3_valueinm: "Value ($M)",
-      cr6c3_dcreceiveddate: "DC Received Date",
-      cr6c3_agingbucket: "Aging Bucket",
-      cr6c3_agingindays: "Aging Days",
-      cr6c3_msf: "MSF",
-      cr6c3_vpn: "VPN",
-      cr6c3_returncarrierpersi: "Return Carrier SI",
-      cr6c3_returnlabeltrackingpersi: "Return Label Tracking SI",
-      cr6c3_mastertableid: "Master Table ID",
-      cr6c3_name: "Name",
-      cr6c3_rmaobtaineddate: "RMA Obtained Date",
-      cr6c3_datacenterreceiveddate: "Datacenter Received Date",
-      cr6c3_partreceiptdate: "Part Receipt Date",
-      cr6c3_pickupdate: "Pickup Date",
-      cr6c3_deliverydate: "Delivery Date",
-      cr6c3_grdate: "GR Date",
-      cr6c3_dispositiondate: "Disposition Date",
+      cr673_reverseactualcarrierunloaddatetime: "Delivered @ SI",
+      cr673_notificationid: "Notification ID",
+      cr673_wallog: "WALLOG",
+      cr673_rma: "RMA",
+      cr673_dc: "DC",
+      cr673_region: "Region",
+      cr673_gputype: "GPU Type",
+      cr673_gpuparttype: "GPU Part Type",
+      cr673_failedgpusn: "Failed GPU SN",
+      cr673_valueinm: "Value ($M)",
+      cr673_dcreceiveddate: "DC Received Date",
+      cr673_agingbucket: "Aging Bucket",
+      cr673_agingindays: "Aging Days",
+      cr673_msf: "MSF",
+      cr673_vpn: "VPN",
+      cr673_returncarrierpersi: "Return Carrier SI",
+      cr673_returnlabeltrackingpersi: "Return Label Tracking SI",
+      cr673_mastertableid: "Master Table ID",
+      cr673_name: "Name",
+      cr673_rmaobtaineddate: "RMA Obtained Date",
+      cr673_datacenterreceiveddate: "Datacenter Received Date",
+      cr673_partreceiptdate: "Part Receipt Date",
+      cr673_pickupdate: "Pickup Date",
+      cr673_deliverydate: "Delivery Date",
+      cr673_grdate: "GR Date",
+      cr673_dispositiondate: "Disposition Date",
     };
 
     if (specialMappings[key]) return specialMappings[key];
 
-    // Quitar prefijo cr6c3_, reemplazar _ con espacio, separar camelCase, capitalizar
-    let label = key.replace(/^cr6c3_/, "");
+    // Quitar prefijo cr673_, reemplazar _ con espacio, separar camelCase, capitalizar
+    let label = key.replace(/^cr673_/, "");
     label = label.replace(/_/g, " ");
     label = label.replace(/([a-z])([A-Z])/g, "$1 $2");
     label = label
@@ -236,10 +236,10 @@ class ExcelService {
    * @returns {string}
    */
   getSupplierNameFromRecord(record) {
-    if (record.cr6c3_deltasupplierid) return "Delta";
-    if (record.cr6c3_ingrasyssupplierid) return "Ingrasys";
-    if (record.cr6c3_ztsupplierid) return "ZT_Systems";
-    if (record.cr6c3_quantasupplierid) return "Quanta";
+    if (record.cr673_deltasupplierid) return "Delta";
+    if (record.cr673_ingrasyssupplierid) return "Ingrasys";
+    if (record.cr673_ztsupplierid) return "ZT_Systems";
+    if (record.cr673_quantasupplierid) return "Quanta";
     return "Unknown";
   }
 
@@ -250,10 +250,10 @@ class ExcelService {
    */
   getRecordId(record) {
     return (
-      record.cr6c3_deltasupplierid ||
-      record.cr6c3_ztsupplierid ||
-      record.cr6c3_ingrasyssupplierid ||
-      record.cr6c3_quantasupplierid ||
+      record.cr673_deltasupplierid ||
+      record.cr673_ztsupplierid ||
+      record.cr673_ingrasyssupplierid ||
+      record.cr673_quantasupplierid ||
       record.id ||
       null
     );
@@ -340,7 +340,7 @@ class ExcelService {
       // Admin: mismas columnas fijas que supplier + columna "Supplier"
       const fixedCols = [
         "id",
-        "cr6c3_notificationid",
+        "cr673_notificationid",
         "supplier",
         ...this.SUPPLIER_EXCEL_COLUMNS,
       ];
@@ -354,7 +354,7 @@ class ExcelService {
       // "id" siempre se incluye (se resuelve desde el campo específico de cada tabla)
       const fixedCols = [
         "id",
-        "cr6c3_notificationid",
+        "cr673_notificationid",
         ...this.SUPPLIER_EXCEL_COLUMNS,
       ];
       const existingKeys = Object.keys(records[0]);
