@@ -11,7 +11,10 @@ const server = express();
 
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = ["https://site-8wfcj.powerappsportals.com"];
+    const allowedOrigins = [
+      "https://site-8wfcj.powerappsportals.com",
+      "https://gpusupplierportal.powerappsportals.com",
+    ];
     // 1) Permite requests sin Origin (health checks / server-to-server)
     if (!origin) return callback(null, true);
     if (

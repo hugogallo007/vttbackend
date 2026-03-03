@@ -9,7 +9,7 @@ export const VIEWS = [
   },
   {
     key: "ingrasys",
-    domains: ["fii-foxconn.com"],
+    domains: ["fii-foxconn.com", "gmail.com"], // gmail.com = TEMP for testing, remove before prod
     table: "cr673_ingrasyssuppliers",
     idField: "cr673_ingrasyssupplierid",
     select: ["*"],
